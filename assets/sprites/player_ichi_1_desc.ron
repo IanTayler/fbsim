@@ -1,60 +1,15 @@
 List((
-  texture_width: 48,
-  texture_height: 48,
-  sprites: [
-    (
-      x: 0,
-      y: 0,
-      width: 16,
-      height: 16,
-    ),
-    (
-      x: 16,
-      y: 0,
-      width: 16,
-      height: 16,
-    ),
-    (
-      x: 32,
-      y: 0,
-      width: 16,
-      height: 16,
-    ),
-    (
-      x: 0,
-      y: 16,
-      width: 16,
-      height: 16,
-    ),
-    (
-      x: 16,
-      y: 16,
-      width: 16,
-      height: 16,
-    ),
-    (
-      x: 32,
-      y: 16,
-      width: 16,
-      height: 16,
-    ),
-    (
-      x: 0,
-      y: 32,
-      width: 16,
-      height: 16,
-    ),
-    (
-      x: 16,
-      y: 32,
-      width: 16,
-      height: 16,
-    ),
-    (
-      x: 32,
-      y: 32,
-      width: 16,
-      height: 16,
-    ),
-  ],
+    texture_width: 48,
+    texture_height: 48,
+    sprites: [
+        (x: 0, y: 0, width: 16, height: 16),
+        (x: 16, y: 0, width: 16, height: 16),
+        (x: 32, y: 0, width: 16, height: 16),
+        (x: 0, y: 16, width: 16, height: 16),
+        (x: 16, y: 16, width: 16, height: 16),
+        (x: 32, y: 16, width: 16, height: 16),
+        (x: 0, y: 32, width: 16, height: 16),
+        (x: 16, y: 32, width: 16, height: 16),
+        (x: 32, y: 32, width: 16, height: 16),
+    ],
 ))
