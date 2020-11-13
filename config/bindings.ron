@@ -3,5 +3,5 @@
         "player_vertical": Emulated(pos: Key(Up), neg: Key(Down)),
         "player_horizontal": Emulated(pos: Key(Right), neg: Key(Left)),
     },
-    actions: {},
+    actions: {"kick": [[Key(A)]]},
 )

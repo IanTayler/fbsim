@@ -1,6 +1,6 @@
 mod fbsim;
 
-use crate::fbsim::{AnimationId, FBSim, FieldSceneData};
+use crate::fbsim::{AnimationId, FieldSceneData, FieldState};
 
 use amethyst::{
     animation::AnimationBundle,
@@ -18,6 +18,7 @@ use amethyst::{
 
 mod components;
 mod config;
+mod rectangle;
 mod systems;
 mod utils;
 
@@ -54,9 +55,16 @@ fn main() -> amethyst::Result<()> {
         )?
         .with_bundle(input_bundle)?
         .with(systems::AnimatePlayer, "animate_player", &[])
-        .with(systems::MovePlayers, "move_player", &[]);
+        .with(systems::MovePlayers, "move_player", &["input_system"])
+        .with(
+            systems::Collisions,
+            "collisions",
+            &["animate_player", "move_player"],
+        )
+        .with(systems::MoveBalls, "move_balls", &["collisions"])
+        .with(systems::InputActions, "input_actions", &["input_system"]);
     let assets_dir = app_root.join("assets");
-    let mut game = Application::new(assets_dir, FBSim::new(), game_data)?;
+    let mut game = Application::new(assets_dir, FieldState::new(), game_data)?;
     game.run();
     Ok(())
 }

@@ -31,6 +31,10 @@ pub enum FieldSceneExtras {
         /// Player info.
         player: components::Player,
     },
+    BallData {
+        /// Ball info.
+        ball: components::Ball,
+    },
     StaticData,
 }
 
@@ -41,6 +45,8 @@ pub struct FieldSceneData {
     sprite_scene: SpriteScenePrefab,
     /// Аll animations that can be run on the entity
     animation_set: AnimationSetPrefab<AnimationId, SpriteRender>,
+    /// Information about collision box. None if no collisions.
+    collision_box: Option<components::CollisionBox>,
     /// Other information including special components.
     extras: FieldSceneExtras,
 }
@@ -67,22 +73,21 @@ fn initialize_camera(world: &mut World) {
 
 // Define the game state.
 #[derive(Default)]
-pub struct FBSim {
+pub struct FieldState {
     pub progress_counter: ProgressCounter,
 }
 
-impl FBSim {
-    pub fn new() -> FBSim {
-        FBSim {
+impl FieldState {
+    pub fn new() -> Self {
+        FieldState {
             progress_counter: ProgressCounter::new(),
         }
     }
 }
 
-impl SimpleState for FBSim {
+impl SimpleState for FieldState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
-        world.register::<components::Net>();
         initialize_field(world, &mut self.progress_counter);
         initialize_camera(world);
     }

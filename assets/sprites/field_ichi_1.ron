@@ -156,12 +156,17 @@ Prefab(
                         ),
                     ],
                 ),
+                // Collide a square around.
+                collision_box: (
+                    upper_left_distance: [-8.0, 8.0],
+                    lower_right_distance: [8.0, -8.0],
+                ),
                 // What defines the specific type of entity.
                 extras: PlayerData(
                     player: (
-                        height: 16.0,
-                        width: 16.0,
-                        speed: 32.0
+                        speed: 48.0,
+                        kick_strength: 5.0,
+                        push_strength: 2.0,
                     )
                 ),
             ),
@@ -175,7 +180,7 @@ Prefab(
                         sprite_number: 13,
                     ),
                     transform: (
-                        translation: (128.0, 4.0, 0.1),
+                        translation: (128.0, 4.0, 0.2),
                     ),
                 ),
                 animation_set: (
@@ -193,7 +198,7 @@ Prefab(
                         sprite_number: 12,
                     ),
                     transform: (
-                        translation: (128.0, 252.0, -0.1),
+                        translation: (128.0, 252.0, -0.2),
                     ),
                 ),
                 animation_set: (
@@ -211,13 +216,19 @@ Prefab(
                         sprite_number: 14,
                     ),
                     transform: (
-                        translation: (128.0, 118.0, 0.1),
+                        translation: (128.0, 118.0, -0.1),
                     ),
                 ),
                 animation_set: (
                     animations: [],
                 ),
-                extras: StaticData,
+                collision_box: (
+                    upper_left_distance: [-2.0, 2.0],
+                    lower_right_distance: [2.0, -2.0],
+                ),
+                extras: BallData(
+                    ball: (velocity: [0.0, 0.0], deaccel: 0.95 )
+                ),
             ),
         ),
     ],

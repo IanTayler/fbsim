@@ -6,26 +6,29 @@ use amethyst::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::config;
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+pub enum ActionType {
+    Kick,
+}
 
 #[derive(Clone, Copy, Debug, Default, Serialize, Deserialize, PrefabData)]
 #[prefab(Component)]
 pub struct Player {
-    pub height: f32,
-    pub width: f32,
     pub speed: f32,
+    pub action: Option<ActionType>,
+    pub kick_strength: f32,
+    pub push_strength: f32,
 }
 
 impl Player {
-    pub fn new() -> Player {
-        Player {
-            width: config::PLAYER_WIDTH,
-            height: config::PLAYER_HEIGHT,
-            speed: config::DEFAULT_PLAYER_SPEED,
+    pub fn strength(&self) -> f32 {
+        if let Some(ActionType::Kick) = self.action {
+            self.kick_strength
+        } else {
+            self.push_strength
         }
     }
 }
-
 impl Component for Player {
     type Storage = DenseVecStorage<Self>;
 }

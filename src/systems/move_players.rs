@@ -1,8 +1,8 @@
-extern crate amethyst;
-
-use crate::components::Player;
-use crate::config::*;
-use crate::utils;
+use crate::{
+    components::{CollisionBox, Player},
+    config::*,
+    utils,
+};
 use amethyst::{
     core::timing::Time,
     core::Transform,
@@ -31,14 +31,15 @@ fn movement_multiplier(raw_movement_x: f32, raw_movement_y: f32, speed: f32) -> 
 impl<'s> System<'s> for MovePlayers {
     type SystemData = (
         ReadStorage<'s, Player>,
+        ReadStorage<'s, CollisionBox>,
         WriteStorage<'s, Transform>,
         Read<'s, InputHandler<StringBindings>>,
         Read<'s, Time>,
     );
 
-    fn run(&mut self, (players, mut transforms, input, time): Self::SystemData) {
+    fn run(&mut self, (players, collision_boxes, mut transforms, input, time): Self::SystemData) {
         let time_elapsed = time.delta_seconds();
-        for (player, transform) in (&players, &mut transforms).join() {
+        for (player, collision, transform) in (&players, &collision_boxes, &mut transforms).join() {
             let (raw_movement_x, raw_movement_y) = utils::input_movement(&input);
             let speed = player.speed;
             let move_multiplier = movement_multiplier(raw_movement_x, raw_movement_y, speed);
@@ -49,15 +50,15 @@ impl<'s> System<'s> for MovePlayers {
             if movement_x != 0.0 {
                 let delta_x = time_elapsed * movement_x;
                 let new_x = (transform.translation().x + delta_x)
-                    .max(PLAYER_WIDTH / 2.0)
-                    .min(SCREEN_WIDTH - PLAYER_WIDTH / 2.0);
+                    .max(-collision.upper_left_distance.x)
+                    .min(SCREEN_WIDTH - collision.lower_right_distance.x);
                 transform.set_translation_x(new_x);
             };
             if movement_y != 0.0 {
                 let delta_y = time_elapsed * movement_y;
                 let new_y = (transform.translation().y + delta_y)
-                    .max(PLAYER_HEIGHT / 2.0)
-                    .min(SCREEN_HEIGHT - PLAYER_HEIGHT / 2.0);
+                    .max(-collision.lower_right_distance.y)
+                    .min(SCREEN_HEIGHT - collision.upper_left_distance.y);
                 transform.set_translation_y(new_y);
             };
         }
