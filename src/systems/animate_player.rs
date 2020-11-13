@@ -1,6 +1,6 @@
 extern crate amethyst;
 
-use crate::fbsim::Player;
+use crate::components::Player;
 use amethyst::{
     core::timing::Time,
     derive::SystemDesc,
