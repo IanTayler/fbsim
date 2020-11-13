@@ -2,11 +2,13 @@ extern crate amethyst;
 
 use amethyst::ecs::{Component, DenseVecStorage};
 
+#[derive(Debug)]
 pub enum NetSide {
     Upper,
     Lower,
 }
 
+#[derive(Debug)]
 pub struct Net {
     side: NetSide,
 }

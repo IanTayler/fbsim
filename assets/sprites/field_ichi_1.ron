@@ -1,0 +1,224 @@
+#![enable(implicit_some)]
+Prefab(
+    entities: [
+        // Player
+        PrefabEntity(
+            data: (
+                // SpriteScenePrefab
+                sprite_scene: (
+                    // SpriteSheetPrefab with index 0
+                    sheet: Sheet(
+                        // TexturePrefab
+                        texture: File("sprites/field_ichi_1.png", (
+                            "IMAGE", (
+                                sampler_info: (
+                                    min_filter: Nearest,
+                                    mag_filter: Nearest,
+                                    mip_filter: Nearest,
+                                    wrap_mode: (Tile, Tile, Tile),
+                                    lod_bias: (0),
+                                    lod_range: (
+                                        start: (0),
+                                        end: (8000),
+                                    ),
+                                    comparison: None,
+                                    border: (0),
+                                    normalized: true,
+                                    anisotropic: Off,
+                                ),
+                            ),
+                        )),
+                        sprites: [
+                            // All sprites in the field spritesheet.
+                            // Includes player sprites, nets, ball.
+                            List((
+                                texture_width: 52,
+                                texture_height: 80,
+                                sprites: [
+                                    (x: 0, y: 0, width: 16, height: 16),
+                                    (x: 16, y: 0, width: 16, height: 16),
+                                    (x: 32, y: 0, width: 16, height: 16),
+                                    (x: 0, y: 16, width: 16, height: 16),
+                                    (x: 16, y: 16, width: 16, height: 16),
+                                    (x: 32, y: 16, width: 16, height: 16),
+                                    (x: 0, y: 32, width: 16, height: 16),
+                                    (x: 16, y: 32, width: 16, height: 16),
+                                    (x: 32, y: 32, width: 16, height: 16),
+                                    (x: 0, y: 48, width: 16, height: 16),
+                                    (x: 16, y: 48, width: 16, height: 16),
+                                    (x: 32, y: 48, width: 16, height: 16),
+                                    (x: 0, y: 64, width: 48, height: 8), // net upper 12
+                                    (x: 0, y: 72, width: 48, height: 8), // net lower 13
+                                    (x: 48, y: 0, width: 4, height: 4), // ball 14
+                                ],
+                            ))
+                        ],
+                        name: "field",
+                    ),
+                    // SpriteRenderPrefab
+                    render: (
+                        sheet: "field",
+                        // 2 is the default standing player.
+                        sprite_number: 2,
+                    ),
+                    // Transform
+                    // TODO: Can I live without this? I want to set it dynamically.
+                    transform: (
+                        translation: (128.0, 128.0, 0.0),
+                    ),
+                ),
+                // AnimationSetPrefab
+                animation_set: (
+                    animations: [
+                        (
+                            // AnimationId
+                            PlayerRun,
+                            (
+                                samplers: [
+                                    (
+                                        0,
+                                        SpriteIndex,
+                                        (
+                                            // Time of key frames
+                                            input: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
+                                            // Sprite indexes from SpriteSheet for key frames
+                                            output: [2, 3, 0, 3, 2, 4, 1, 4, 2],
+                                            function: Step,
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        (
+                            // AnimationId
+                            PlayerCelebrate,
+                            (
+                                samplers: [
+                                    (
+                                        1,
+                                        SpriteIndex,
+                                        (
+                                            // Time of key frames
+                                            input: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.9, 1.0],
+                                            // Sprite indexes from SpriteSheet for key frames
+                                            output: [2, 5, 8, 5, 2, 7, 6, 7, 2],
+                                            function: Step,
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        (
+                            // AnimationId
+                            PlayerJump,
+                            (
+                                samplers: [
+                                    (
+                                        2,
+                                        SpriteIndex,
+                                        (
+                                            // Time of key frames
+                                            input: [0.0, 0.3, 0.5, 0.7, 0.8],
+                                            // Sprite indexes from SpriteSheet for key frames
+                                            output: [2, 7, 6, 7, 2],
+                                            function: Step,
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        (
+                            // AnimationId
+                            PlayerStand,
+                            (
+                                samplers: [
+                                    (
+                                        3,
+                                        SpriteIndex,
+                                        (
+                                            // Time of key frames
+                                            input: [
+                                                0.0, 2.4, 2.45, 2.5, 2.55,
+                                                2.6, 2.65, 2.7, 2.75, 2.8,
+                                                2.85, 2.9, 2.95,
+                                            ],
+                                            // Sprite indexes from SpriteSheet for key frames
+                                            output: [
+                                                2, 8, 10, 11, 10,
+                                                9, 8, 9, 10, 11,
+                                                10, 8, 2
+                                            ],
+                                            function: Step,
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                    ],
+                ),
+                // What defines the specific type of entity.
+                extras: PlayerData(
+                    player: (
+                        height: 16.0,
+                        width: 16.0,
+                        speed: 32.0
+                    )
+                ),
+            ),
+        ),
+        // LowerNet
+        PrefabEntity(
+            data: (
+                sprite_scene: (
+                    render: (
+                        sheet: "field",
+                        sprite_number: 13,
+                    ),
+                    transform: (
+                        translation: (128.0, 4.0, 0.1),
+                    ),
+                ),
+                animation_set: (
+                    animations: [],
+                ),
+                extras: StaticData,
+            ),
+        ),
+        // UpperNet
+        PrefabEntity(
+            data: (
+                sprite_scene: (
+                    render: (
+                        sheet: "field",
+                        sprite_number: 12,
+                    ),
+                    transform: (
+                        translation: (128.0, 252.0, -0.1),
+                    ),
+                ),
+                animation_set: (
+                    animations: [],
+                ),
+                extras: StaticData,
+            ),
+        ),
+        // Ball
+        PrefabEntity(
+            data: (
+                sprite_scene: (
+                    render: (
+                        sheet: "field",
+                        sprite_number: 14,
+                    ),
+                    transform: (
+                        translation: (128.0, 118.0, 0.1),
+                    ),
+                ),
+                animation_set: (
+                    animations: [],
+                ),
+                extras: StaticData,
+            ),
+        ),
+    ],
+)

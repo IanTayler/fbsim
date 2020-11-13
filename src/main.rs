@@ -1,15 +1,17 @@
 mod fbsim;
 
-use crate::fbsim::FBSim;
+use crate::fbsim::{AnimationId, FBSim, FieldSceneData};
 
 use amethyst::{
+    animation::AnimationBundle,
+    assets::PrefabLoaderSystemDesc,
     core::transform::TransformBundle,
     input::{InputBundle, StringBindings},
     prelude::*,
     renderer::{
         plugins::{RenderFlat2D, RenderToWindow},
         types::DefaultBackend,
-        RenderingBundle,
+        RenderingBundle, SpriteRender,
     },
     utils::application_root_dir,
 };
@@ -17,6 +19,7 @@ use amethyst::{
 mod components;
 mod config;
 mod systems;
+mod utils;
 
 fn main() -> amethyst::Result<()> {
     // Initialization
@@ -29,6 +32,15 @@ fn main() -> amethyst::Result<()> {
     };
     // Setup a basic GameData
     let game_data = GameDataBuilder::default()
+        .with_system_desc(
+            PrefabLoaderSystemDesc::<FieldSceneData>::default(),
+            "scene_loader",
+            &[],
+        )
+        .with_bundle(AnimationBundle::<AnimationId, SpriteRender>::new(
+            "sprite_animation_control",
+            "sprite_sampler_interpolation",
+        ))?
         .with_bundle(TransformBundle::new())?
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
@@ -44,7 +56,7 @@ fn main() -> amethyst::Result<()> {
         .with(systems::AnimatePlayer, "animate_player", &[])
         .with(systems::MovePlayers, "move_player", &[]);
     let assets_dir = app_root.join("assets");
-    let mut game = Application::new(assets_dir, FBSim, game_data)?;
+    let mut game = Application::new(assets_dir, FBSim::new(), game_data)?;
     game.run();
     Ok(())
 }

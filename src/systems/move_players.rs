@@ -2,6 +2,7 @@ extern crate amethyst;
 
 use crate::components::Player;
 use crate::config::*;
+use crate::utils;
 use amethyst::{
     core::timing::Time,
     core::Transform,
@@ -38,14 +39,7 @@ impl<'s> System<'s> for MovePlayers {
     fn run(&mut self, (players, mut transforms, input, time): Self::SystemData) {
         let time_elapsed = time.delta_seconds();
         for (player, transform) in (&players, &mut transforms).join() {
-            let raw_movement_y = match input.axis_value("player_vertical") {
-                Some(mov) => mov,
-                None => 0.0,
-            };
-            let raw_movement_x = match input.axis_value("player_horizontal") {
-                Some(mov) => mov,
-                None => 0.0,
-            };
+            let (raw_movement_x, raw_movement_y) = utils::input_movement(&input);
             let speed = player.speed;
             let move_multiplier = movement_multiplier(raw_movement_x, raw_movement_y, speed);
             let (movement_x, movement_y) = (
