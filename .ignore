@@ -1,3 +1,4 @@
 .git
 target
-assets
+/assets/sprites/*.png
+assets/sprites/orig
