@@ -6,10 +6,10 @@ use amethyst::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, Debug, Serialize, Deserialize, PrefabData)]
+#[derive(Clone, Copy, Debug, Default, Serialize, Deserialize, PrefabData)]
 #[prefab(Component)]
-pub struct Ball;
+pub struct Human;
 
-impl Component for Ball {
+impl Component for Human {
     type Storage = DenseVecStorage<Self>;
 }

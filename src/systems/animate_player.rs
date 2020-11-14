@@ -29,7 +29,6 @@ impl<'s> System<'s> for AnimatePlayer {
         &mut self,
         (entities, players, animation_sets, mut control_sets, input): Self::SystemData,
     ) {
-        // For each entity that has AnimationSet
         for (entity, _player, animation_set) in (&entities, &players, &animation_sets).join() {
             // Creates a new AnimationControlSet for the entity
             let control_set = get_animation_set(&mut control_sets, entity).unwrap();

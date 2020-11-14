@@ -55,13 +55,13 @@ fn main() -> amethyst::Result<()> {
         )?
         .with_bundle(input_bundle)?
         .with(systems::AnimatePlayer, "animate_player", &[])
-        .with(systems::MovePlayers, "move_player", &["input_system"])
         .with(
             systems::Collisions,
             "collisions",
-            &["animate_player", "move_player"],
+            &["animate_player", "input_system"],
         )
-        .with(systems::MoveBalls, "move_balls", &["collisions"])
+        .with(systems::MoveObjects, "move_objects", &["collisions"])
+        .with(systems::InputMovement, "input_movement", &["input_system"])
         .with(systems::InputActions, "input_actions", &["input_system"]);
     let assets_dir = app_root.join("assets");
     let mut game = Application::new(assets_dir, FieldState::new(), game_data)?;

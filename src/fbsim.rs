@@ -1,3 +1,4 @@
+use crate::{components, config};
 use amethyst::{
     animation::AnimationSetPrefab,
     assets::{PrefabData, PrefabLoader, ProgressCounter, RonFormat},
@@ -13,9 +14,6 @@ use amethyst::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::components;
-use crate::config;
-
 /// Animation ids used in a AnimationSet
 #[derive(Eq, PartialOrd, PartialEq, Hash, Debug, Copy, Clone, Deserialize, Serialize)]
 pub enum AnimationId {
@@ -30,6 +28,10 @@ pub enum FieldSceneExtras {
     PlayerData {
         /// Player info.
         player: components::Player,
+        /// Human component. None if not human.
+        human: Option<components::Human>,
+        /// Robot component. None if not robot.
+        robot: Option<components::Robot>,
     },
     BallData {
         /// Ball info.
@@ -49,6 +51,8 @@ pub struct FieldSceneData {
     collision_box: Option<components::CollisionBox>,
     /// Other information including special components.
     extras: FieldSceneExtras,
+    /// To describe how the object is moving.
+    movement_state: Option<components::MovementState>,
 }
 
 fn initialize_field(world: &mut World, progress_counter: &mut ProgressCounter) {

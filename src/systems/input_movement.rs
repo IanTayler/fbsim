@@ -1,10 +1,8 @@
 use crate::{
-    components::{CollisionBox, Player},
-    config::*,
+    components::{Human, MovementState, Player},
     utils,
 };
 use amethyst::{
-    core::timing::Time,
     core::Transform,
     derive::SystemDesc,
     ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
@@ -12,7 +10,7 @@ use amethyst::{
 };
 
 #[derive(SystemDesc)]
-pub struct MovePlayers;
+pub struct InputMovement;
 
 fn movement_multiplier(raw_movement_x: f32, raw_movement_y: f32, speed: f32) -> f32 {
     // We compute what's the right multiplier for the individual axis movement if
@@ -48,18 +46,22 @@ fn rotate_player(movement_x: f32, movement_y: f32, transform: &mut Transform) {
     }
 }
 
-impl<'s> System<'s> for MovePlayers {
+impl<'s> System<'s> for InputMovement {
     type SystemData = (
         ReadStorage<'s, Player>,
-        ReadStorage<'s, CollisionBox>,
+        ReadStorage<'s, Human>,
+        WriteStorage<'s, MovementState>,
         WriteStorage<'s, Transform>,
         Read<'s, InputHandler<StringBindings>>,
-        Read<'s, Time>,
     );
 
-    fn run(&mut self, (players, collision_boxes, mut transforms, input, time): Self::SystemData) {
-        let time_elapsed = time.delta_seconds();
-        for (player, collision, transform) in (&players, &collision_boxes, &mut transforms).join() {
+    fn run(
+        &mut self,
+        (players, humans, mut movement_states, mut transforms, input): Self::SystemData,
+    ) {
+        for (player, _human, movement_state, transform) in
+            (&players, &humans, &mut movement_states, &mut transforms).join()
+        {
             let (raw_movement_x, raw_movement_y) = utils::input_movement(&input);
             let speed = player.speed;
             let move_multiplier = movement_multiplier(raw_movement_x, raw_movement_y, speed);
@@ -68,20 +70,8 @@ impl<'s> System<'s> for MovePlayers {
                 raw_movement_y * move_multiplier,
             );
             rotate_player(movement_x, movement_y, transform);
-            if movement_x != 0.0 {
-                let delta_x = time_elapsed * movement_x;
-                let new_x = (transform.translation().x + delta_x)
-                    .max(-collision.upper_left_distance.x)
-                    .min(SCREEN_WIDTH - collision.lower_right_distance.x);
-                transform.set_translation_x(new_x);
-            };
-            if movement_y != 0.0 {
-                let delta_y = time_elapsed * movement_y;
-                let new_y = (transform.translation().y + delta_y)
-                    .max(-collision.lower_right_distance.y)
-                    .min(SCREEN_HEIGHT - collision.upper_left_distance.y);
-                transform.set_translation_y(new_y);
-            };
+            movement_state.velocity.x += movement_x;
+            movement_state.velocity.y += movement_y;
         }
     }
 }
