@@ -26,7 +26,7 @@ impl<'s> System<'s> for Collisions {
         &mut self,
         (entities, mut balls, players, collision_boxes, transforms): Self::SystemData,
     ) {
-        // TODO: some semblance of efficiency.
+        // TODO: some semblance of efficiency for all this.
         for (_ball_entity, ball, ball_collision, ball_transform) in
             (&entities, &mut balls, &collision_boxes, &transforms).join()
         {

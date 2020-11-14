@@ -28,6 +28,26 @@ fn movement_multiplier(raw_movement_x: f32, raw_movement_y: f32, speed: f32) -> 
     }
 }
 
+fn rotate_player(movement_x: f32, movement_y: f32, transform: &mut Transform) {
+    let has_movement = movement_x.abs() + movement_y.abs() > 0.0;
+    if has_movement {
+        let rotation = if movement_x.abs() >= movement_y.abs() {
+            if movement_x >= 0.0 {
+                std::f32::consts::PI / 2.0
+            } else {
+                3.0 * std::f32::consts::PI / 2.0
+            }
+        } else {
+            if movement_y >= 0.0 {
+                std::f32::consts::PI
+            } else {
+                0.0
+            }
+        };
+        transform.set_rotation_2d(rotation);
+    }
+}
+
 impl<'s> System<'s> for MovePlayers {
     type SystemData = (
         ReadStorage<'s, Player>,
@@ -47,6 +67,7 @@ impl<'s> System<'s> for MovePlayers {
                 raw_movement_x * move_multiplier,
                 raw_movement_y * move_multiplier,
             );
+            rotate_player(movement_x, movement_y, transform);
             if movement_x != 0.0 {
                 let delta_x = time_elapsed * movement_x;
                 let new_x = (transform.translation().x + delta_x)
