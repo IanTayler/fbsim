@@ -1,15 +1,11 @@
-extern crate amethyst;
-
-use crate::components::Player;
+use crate::components::{MovementState, Player};
 use crate::fbsim::AnimationId;
-use crate::utils;
 use amethyst::{
     animation::{
         get_animation_set, AnimationCommand, AnimationControlSet, AnimationSet, EndControl,
     },
     derive::SystemDesc,
-    ecs::{Entities, Join, Read, ReadStorage, System, SystemData, WriteStorage},
-    input::{InputHandler, StringBindings},
+    ecs::{Entities, Join, ReadStorage, System, SystemData, WriteStorage},
     renderer::SpriteRender,
 };
 
@@ -21,19 +17,21 @@ impl<'s> System<'s> for AnimatePlayer {
         Entities<'s>,
         ReadStorage<'s, Player>,
         ReadStorage<'s, AnimationSet<AnimationId, SpriteRender>>,
+        ReadStorage<'s, MovementState>,
         WriteStorage<'s, AnimationControlSet<AnimationId, SpriteRender>>,
-        Read<'s, InputHandler<StringBindings>>,
     );
 
     fn run(
         &mut self,
-        (entities, players, animation_sets, mut control_sets, input): Self::SystemData,
+        (entities, players, animation_sets, movement_states, mut control_sets): Self::SystemData,
     ) {
-        for (entity, _player, animation_set) in (&entities, &players, &animation_sets).join() {
+        for (entity, _player, movement_state, animation_set) in
+            (&entities, &players, &movement_states, &animation_sets).join()
+        {
             // Creates a new AnimationControlSet for the entity
             let control_set = get_animation_set(&mut control_sets, entity).unwrap();
-            let (raw_movement_x, raw_movement_y) = utils::input_movement(&input);
-            if raw_movement_x == 0.0 && raw_movement_y == 0.0 {
+            let velocity = movement_state.velocity;
+            if velocity.x == 0.0 && velocity.y == 0.0 {
                 control_set.abort(AnimationId::PlayerRun);
                 control_set.add_animation(
                     AnimationId::PlayerStand,

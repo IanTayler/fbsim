@@ -42,6 +42,10 @@ impl rectangle::Rectangle<f32> for CollisionBox {
     fn lower_right(&self) -> math::Vector2<f32> {
         self.lower_right_distance
     }
+
+    fn center(&self) -> math::Vector2<f32> {
+        (self.upper_left_distance + self.lower_right_distance) / 2.0
+    }
 }
 
 pub fn are_colliding(

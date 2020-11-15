@@ -151,6 +151,78 @@ Prefab(
                 ),
             ),
         ),
+        // Goal post lower left
+        PrefabEntity(
+            data: (
+                sprite_scene: (
+                    transform: (
+                        translation: (128.0, 4.0, 0.0),
+                    ),
+                ),
+                collision_box: (
+                    upper_left_distance: [-25.0, 4.0],
+                    lower_right_distance: [-21.0, -4.0],
+                ),
+                animation_set: (
+                    animations: [],
+                ),
+                extras: StaticData,
+            ),
+        ),
+        // Goal post upper left
+        PrefabEntity(
+            data: (
+                sprite_scene: (
+                    transform: (
+                        translation: (128.0, 252.0, 0.0),
+                    ),
+                ),
+                collision_box: (
+                    upper_left_distance: [-25.0, 4.0],
+                    lower_right_distance: [-21.0, -4.0],
+                ),
+                animation_set: (
+                    animations: [],
+                ),
+                extras: StaticData,
+            ),
+        ),
+        // Goal post lower right
+        PrefabEntity(
+            data: (
+                sprite_scene: (
+                    transform: (
+                        translation: (128.0, 4.0, 0.0),
+                    ),
+                ),
+                collision_box: (
+                    upper_left_distance: [21.0, 4.0],
+                    lower_right_distance: [25.0, -4.0],
+                ),
+                animation_set: (
+                    animations: [],
+                ),
+                extras: StaticData,
+            ),
+        ),
+        // Goal post upper right
+        PrefabEntity(
+            data: (
+                sprite_scene: (
+                    transform: (
+                        translation: (128.0, 252.0, 0.0),
+                    ),
+                ),
+                collision_box: (
+                    upper_left_distance: [21.0, 4.0],
+                    lower_right_distance: [25.0, -4.0],
+                ),
+                animation_set: (
+                    animations: [],
+                ),
+                extras: StaticData,
+            ),
+        ),
         // LowerNet
         PrefabEntity(
             data: (
