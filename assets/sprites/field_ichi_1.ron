@@ -47,9 +47,9 @@ Prefab(
                                     (x: 0, y: 48, width: 16, height: 16),
                                     (x: 16, y: 48, width: 16, height: 16),
                                     (x: 32, y: 48, width: 16, height: 16),
-                                    (x: 0, y: 64, width: 48, height: 8), // net upper 12
-                                    (x: 0, y: 72, width: 48, height: 8), // net lower 13
-                                    (x: 48, y: 64, width: 4, height: 4), // ball 14
+                                    (x: 0, y: 64, width: 60, height: 8), // net upper 12
+                                    (x: 0, y: 72, width: 60, height: 8), // net lower 13
+                                    (x: 60, y: 64, width: 4, height: 4), // ball 14
                                     (x: 48, y: 0, width: 16, height: 16), // robot 15
                                     (x: 64, y: 0, width: 16, height: 16),
                                     (x: 80, y: 0, width: 16, height: 16),
