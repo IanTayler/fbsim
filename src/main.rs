@@ -1,7 +1,6 @@
 mod fbsim;
 
 use crate::fbsim::{AnimationId, FieldSceneData, FieldState};
-
 use amethyst::{
     animation::AnimationBundle,
     assets::PrefabLoaderSystemDesc,
@@ -13,12 +12,14 @@ use amethyst::{
         types::DefaultBackend,
         RenderingBundle, SpriteRender,
     },
+    ui::{RenderUi, UiBundle},
     utils::application_root_dir,
 };
 
 mod components;
 mod config;
 mod rectangle;
+mod resources;
 mod systems;
 mod utils;
 
@@ -42,18 +43,20 @@ fn main() -> amethyst::Result<()> {
             "sprite_animation_control",
             "sprite_sampler_interpolation",
         ))?
+        .with_bundle(input_bundle)?
         .with_bundle(TransformBundle::new())?
+        .with_bundle(UiBundle::<StringBindings>::new())?
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 // Plugin for easy rendering of windows.
                 .with_plugin(
                     RenderToWindow::from_config_path(display_config_path)?
-                        .with_clear([0.0, 0.7, 0.0, 1.0]),
+                        .with_clear([0.0, 0.6, 0.0, 1.0]),
                 )
                 // RenderFlat2D plugin is used to render entities with a `SpriteRender` component.
-                .with_plugin(RenderFlat2D::default()),
+                .with_plugin(RenderFlat2D::default())
+                .with_plugin(RenderUi::default()),
         )?
-        .with_bundle(input_bundle)?
         .with(systems::AnimatePlayer, "animate_player", &[])
         .with(
             systems::Collisions,
@@ -62,7 +65,13 @@ fn main() -> amethyst::Result<()> {
         )
         .with(systems::MoveObjects, "move_objects", &["collisions"])
         .with(systems::InputMovement, "input_movement", &["input_system"])
-        .with(systems::InputActions, "input_actions", &["input_system"]);
+        .with(systems::InputActions, "input_actions", &["input_system"])
+        .with(
+            systems::ai::SillyRun,
+            "ai_logic",
+            &["input_actions", "move_objects"],
+        )
+        .with(systems::GoalResetter, "goal_resetter", &[]);
     let assets_dir = app_root.join("assets");
     let mut game = Application::new(assets_dir, FieldState::new(), game_data)?;
     game.run();

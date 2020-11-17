@@ -3,7 +3,6 @@ use crate::{
     utils,
 };
 use amethyst::{
-    core::Transform,
     derive::SystemDesc,
     ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
     input::{InputHandler, StringBindings},
@@ -26,42 +25,16 @@ fn movement_multiplier(raw_movement_x: f32, raw_movement_y: f32, speed: f32) -> 
     }
 }
 
-fn rotate_player(movement_x: f32, movement_y: f32, transform: &mut Transform) {
-    let has_movement = movement_x.abs() + movement_y.abs() > 0.0;
-    if has_movement {
-        let rotation = if movement_x.abs() >= movement_y.abs() {
-            if movement_x >= 0.0 {
-                std::f32::consts::PI / 2.0
-            } else {
-                3.0 * std::f32::consts::PI / 2.0
-            }
-        } else {
-            if movement_y >= 0.0 {
-                std::f32::consts::PI
-            } else {
-                0.0
-            }
-        };
-        transform.set_rotation_2d(rotation);
-    }
-}
-
 impl<'s> System<'s> for InputMovement {
     type SystemData = (
         ReadStorage<'s, Player>,
         ReadStorage<'s, Human>,
         WriteStorage<'s, MovementState>,
-        WriteStorage<'s, Transform>,
         Read<'s, InputHandler<StringBindings>>,
     );
 
-    fn run(
-        &mut self,
-        (players, humans, mut movement_states, mut transforms, input): Self::SystemData,
-    ) {
-        for (player, _human, movement_state, transform) in
-            (&players, &humans, &mut movement_states, &mut transforms).join()
-        {
+    fn run(&mut self, (players, humans, mut movement_states, input): Self::SystemData) {
+        for (player, _human, movement_state) in (&players, &humans, &mut movement_states).join() {
             let (raw_movement_x, raw_movement_y) = utils::input_movement(&input);
             let speed = player.speed;
             let move_multiplier = movement_multiplier(raw_movement_x, raw_movement_y, speed);
@@ -69,7 +42,6 @@ impl<'s> System<'s> for InputMovement {
                 raw_movement_x * move_multiplier,
                 raw_movement_y * move_multiplier,
             );
-            rotate_player(movement_x, movement_y, transform);
             movement_state.velocity.x += movement_x;
             movement_state.velocity.y += movement_y;
         }

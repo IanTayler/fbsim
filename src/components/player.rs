@@ -1,3 +1,4 @@
+use crate::utils;
 use amethyst::{
     assets::PrefabData,
     derive::PrefabData,
@@ -11,13 +12,14 @@ pub enum ActionType {
     Kick,
 }
 
-#[derive(Clone, Copy, Debug, Default, Serialize, Deserialize, PrefabData)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PrefabData)]
 #[prefab(Component)]
 pub struct Player {
     pub speed: f32,
     pub action: Option<ActionType>,
     pub kick_strength: f32,
     pub push_strength: f32,
+    pub side: utils::Side,
 }
 
 impl Player {

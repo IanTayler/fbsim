@@ -76,7 +76,7 @@ Prefab(
                     // Transform
                     // TODO: Can I live without this? I want to set it dynamically.
                     transform: (
-                        translation: (128.0, 128.0, 0.0),
+                        translation: (128.0, 216.0, 0.0),
                     ),
                 ),
                 // AnimationSetPrefab
@@ -132,8 +132,8 @@ Prefab(
                 ),
                 // Collide a square around.
                 collision_box: (
-                    upper_left_distance: [-8.0, 8.0],
-                    lower_right_distance: [8.0, -8.0],
+                    upper_left_distance: [-6.0, 6.0],
+                    lower_right_distance: [6.0, -6.0],
                 ),
                 movement_state: (
                     velocity: [0.0, 0.0],
@@ -146,6 +146,7 @@ Prefab(
                         speed: 48.0,
                         kick_strength: 256.0,
                         push_strength: 96.0,
+                        side: UpperSide,
                     ),
                     human: Human,
                 ),
@@ -160,8 +161,8 @@ Prefab(
                     ),
                 ),
                 collision_box: (
-                    upper_left_distance: [-25.0, 4.0],
-                    lower_right_distance: [-21.0, -4.0],
+                    upper_left_distance: [-31.0, 4.0],
+                    lower_right_distance: [-27.0, -4.0],
                 ),
                 animation_set: (
                     animations: [],
@@ -178,8 +179,8 @@ Prefab(
                     ),
                 ),
                 collision_box: (
-                    upper_left_distance: [-25.0, 4.0],
-                    lower_right_distance: [-21.0, -4.0],
+                    upper_left_distance: [-31.0, 4.0],
+                    lower_right_distance: [-27.0, -4.0],
                 ),
                 animation_set: (
                     animations: [],
@@ -196,8 +197,8 @@ Prefab(
                     ),
                 ),
                 collision_box: (
-                    upper_left_distance: [21.0, 4.0],
-                    lower_right_distance: [25.0, -4.0],
+                    upper_left_distance: [27.0, 4.0],
+                    lower_right_distance: [31.0, -4.0],
                 ),
                 animation_set: (
                     animations: [],
@@ -214,8 +215,8 @@ Prefab(
                     ),
                 ),
                 collision_box: (
-                    upper_left_distance: [21.0, 4.0],
-                    lower_right_distance: [25.0, -4.0],
+                    upper_left_distance: [27.0, 4.0],
+                    lower_right_distance: [31.0, -4.0],
                 ),
                 animation_set: (
                     animations: [],
@@ -238,7 +239,13 @@ Prefab(
                 animation_set: (
                     animations: [],
                 ),
-                extras: StaticData,
+                collision_box: (
+                    upper_left_distance: [-26.0, 2.0],
+                    lower_right_distance: [26.0, -6.0],
+                ),
+                extras: NetData(
+                    net: Net(side: LowerSide),
+                ),
             ),
         ),
         // UpperNet
@@ -256,7 +263,42 @@ Prefab(
                 animation_set: (
                     animations: [],
                 ),
-                extras: StaticData,
+                collision_box: (
+                    upper_left_distance: [-26.0, 6.0],
+                    lower_right_distance: [26.0, -2.0],
+                ),
+                extras: NetData(
+                    net: Net(side: UpperSide),
+                ),
+            ),
+        ),
+        // Ball
+        PrefabEntity(
+            data: (
+                sprite_scene: (
+                    render: (
+                        sheet: "field",
+                        sprite_number: 14,
+                    ),
+                    transform: (
+                        translation: (128.0, 128.0, -0.1),
+                    ),
+                ),
+                animation_set: (
+                    animations: [],
+                ),
+                collision_box: (
+                    upper_left_distance: [-2.0, 2.0],
+                    lower_right_distance: [2.0, -2.0],
+                ),
+                movement_state: (
+                    velocity: [0.0, 0.0],
+                    deaccel: 192.0,
+                    reset: false,
+                ),
+                extras: BallData(
+                    ball: Ball,
+                ),
             ),
         ),
         // Enemy
@@ -335,37 +377,9 @@ Prefab(
                         speed: 48.0,
                         kick_strength: 256.0,
                         push_strength: 96.0,
+                        side: LowerSide,
                     ),
-                    robot: Robot,
-                ),
-            ),
-        ),
-        // Ball
-        PrefabEntity(
-            data: (
-                sprite_scene: (
-                    render: (
-                        sheet: "field",
-                        sprite_number: 14,
-                    ),
-                    transform: (
-                        translation: (128.0, 118.0, -0.1),
-                    ),
-                ),
-                animation_set: (
-                    animations: [],
-                ),
-                collision_box: (
-                    upper_left_distance: [-2.0, 2.0],
-                    lower_right_distance: [2.0, -2.0],
-                ),
-                movement_state: (
-                    velocity: [0.0, 0.0],
-                    deaccel: 192.0,
-                    reset: false,
-                ),
-                extras: BallData(
-                    ball: Ball,
+                    robot: Robot(logic_module: SillyRun),
                 ),
             ),
         ),
