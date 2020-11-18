@@ -1,5 +1,7 @@
 use crate::{
-    components::{collision_box, Ball, CollisionBox, MovementState, Net, Player},
+    components::{
+        collision_box, player, Ball, CollisionBox, MovementState, Net, Player, PlayerType,
+    },
     resources::Score,
     utils::Side,
 };
@@ -18,6 +20,7 @@ impl<'s> System<'s> for Collisions {
         WriteStorage<'s, MovementState>,
         ReadStorage<'s, Ball>,
         ReadStorage<'s, Player>,
+        ReadStorage<'s, PlayerType>,
         ReadStorage<'s, Net>,
         ReadStorage<'s, CollisionBox>,
         ReadStorage<'s, Transform>,
@@ -32,6 +35,7 @@ impl<'s> System<'s> for Collisions {
             mut movement_states,
             balls,
             players,
+            player_types,
             nets,
             collision_boxes,
             transforms,
@@ -46,13 +50,17 @@ impl<'s> System<'s> for Collisions {
             (&mut movement_states, &balls, &collision_boxes, &transforms).join()
         {
             // Handle collisions with players (i.e. kicks)
-            for (player, player_collision, player_transform) in
-                (&players, &collision_boxes, &transforms).join()
+            for (player, player_type, player_collision, player_transform) in
+                (&players, &player_types, &collision_boxes, &transforms).join()
             {
                 if collision_box::are_colliding(
                     ball_collision,
                     ball_transform,
-                    player_collision,
+                    &player::reduce_collision(
+                        player_collision,
+                        player_type,
+                        movement_state.velocity.norm(),
+                    ),
                     player_transform,
                 ) {
                     let center_difference =

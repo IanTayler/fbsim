@@ -8,7 +8,7 @@ use amethyst::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Clone, Serialize, PrefabData)]
+#[derive(Debug, Deserialize, Copy, Clone, Serialize, PrefabData)]
 #[prefab(Component)]
 pub struct CollisionBox {
     /// Distance from the center to the upper left.

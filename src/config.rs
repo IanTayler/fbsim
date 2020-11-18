@@ -1,6 +1,11 @@
 // TODO: move this to configuration files?
+// Screen constants
 pub const SCREEN_WIDTH: f32 = 256.0;
 pub const SCREEN_HEIGHT: f32 = 256.0;
+// Some ~physics constants
+pub const BALL_SPEED_FOR_MINIMUM_COLLISION: f32 = 256.0;
+pub const BALL_MINIMUM_COLLISION_FACTOR: f32 = 0.3;
+// Player position constants
 pub const MAXIMUM_TEAM_SIZE: usize = 5;
 pub const FORWARD_NUMBER: usize = 0;
 pub const GOALIE_NUMBER: usize = 1;

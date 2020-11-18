@@ -1,4 +1,4 @@
-use crate::{config, utils};
+use crate::{components::CollisionBox, config, utils};
 use amethyst::{
     assets::PrefabData,
     derive::PrefabData,
@@ -71,4 +71,25 @@ impl PlayerType {
 
 impl Component for PlayerType {
     type Storage = DenseVecStorage<Self>;
+}
+
+/// Makes balls that go fast collide less with players.
+pub fn reduce_collision(
+    player_collision: &CollisionBox,
+    player_type: &PlayerType,
+    ball_speed: f32,
+) -> CollisionBox {
+    match player_type {
+        PlayerType::Goalie => *player_collision,
+        _ => {
+            let max_speed = config::BALL_SPEED_FOR_MINIMUM_COLLISION;
+            let min_factor = config::BALL_MINIMUM_COLLISION_FACTOR;
+            let reduce_factor = ball_speed.min(max_speed) * (1.0 - min_factor) / max_speed;
+            let keep_factor = 1.0 - reduce_factor;
+            CollisionBox {
+                upper_left_distance: player_collision.upper_left_distance * keep_factor,
+                lower_right_distance: player_collision.lower_right_distance * keep_factor,
+            }
+        }
+    }
 }
