@@ -1,0 +1,136 @@
+#![enable(implicit_some)]
+Prefab(
+    entities: [
+        // Player
+        PrefabEntity(
+            data: (
+                // SpriteScenePrefab
+                sprite_scene: (
+                    // SpriteSheetPrefab with index 0
+                    sheet: Sheet(
+                        // TexturePrefab
+                        texture: File("sprites/field_ichi_1.png", (
+                            "IMAGE", (
+                                sampler_info: (
+                                    min_filter: Nearest,
+                                    mag_filter: Nearest,
+                                    mip_filter: Nearest,
+                                    wrap_mode: (Tile, Tile, Tile),
+                                    lod_bias: (0),
+                                    lod_range: (
+                                        start: (0),
+                                        end: (8000),
+                                    ),
+                                    comparison: None,
+                                    border: (0),
+                                    normalized: true,
+                                    anisotropic: Off,
+                                ),
+                            ),
+                        )),
+                        sprites: [
+                            // All sprites in the field spritesheet.
+                            // Includes player sprites, nets, ball.
+                            List((
+                                texture_width: 96,
+                                texture_height: 80,
+                                sprites: [
+                                    (x: 0, y: 0, width: 16, height: 16), // human 0
+                                    (x: 16, y: 0, width: 16, height: 16),
+                                    (x: 32, y: 0, width: 16, height: 16),
+                                    (x: 0, y: 16, width: 16, height: 16),
+                                    (x: 16, y: 16, width: 16, height: 16),
+                                    (x: 32, y: 16, width: 16, height: 16),
+                                    (x: 0, y: 32, width: 16, height: 16),
+                                    (x: 16, y: 32, width: 16, height: 16),
+                                    (x: 32, y: 32, width: 16, height: 16),
+                                    (x: 0, y: 48, width: 16, height: 16),
+                                    (x: 16, y: 48, width: 16, height: 16),
+                                    (x: 32, y: 48, width: 16, height: 16),
+                                ],
+                            ))
+                        ],
+                        name: "player_ichi",
+                    ),
+                    // SpriteRenderPrefab
+                    render: (
+                        sheet: "player_ichi",
+                        // 2 is the default standing player.
+                        sprite_number: 2,
+                    ),
+                ),
+                // AnimationSetPrefab
+                animation_set: (
+                    animations: [
+                        (
+                            // AnimationId
+                            PlayerRun,
+                            (
+                                samplers: [
+                                    (
+                                        0,
+                                        SpriteIndex,
+                                        (
+                                            // Time of key frames
+                                            input: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
+                                            // Sprite indexes from SpriteSheet for key frames
+                                            output: [2, 3, 0, 3, 2, 4, 1, 4, 2],
+                                            function: Step,
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        (
+                            // AnimationId
+                            PlayerStand,
+                            (
+                                samplers: [
+                                    (
+                                        3,
+                                        SpriteIndex,
+                                        (
+                                            // Time of key frames
+                                            input: [
+                                                0.0, 2.4, 2.45, 2.5, 2.55,
+                                                2.6, 2.65, 2.7, 2.75, 2.8,
+                                                2.85, 2.9, 2.95,
+                                            ],
+                                            // Sprite indexes from SpriteSheet for key frames
+                                            output: [
+                                                2, 8, 10, 11, 10,
+                                                9, 8, 9, 10, 11,
+                                                10, 8, 2
+                                            ],
+                                            function: Step,
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                    ],
+                ),
+                // Collide a square around.
+                collision_box: (
+                    upper_left_distance: [-6.0, 6.0],
+                    lower_right_distance: [6.0, -6.0],
+                ),
+                movement_state: (
+                    velocity: [0.0, 0.0],
+                    deaccel: 0.0,
+                    reset: true,
+                ),
+                // What defines the specific type of entity.
+                extras: PlayerData(
+                    player: (
+                        speed: 48.0,
+                        kick_strength: 256.0,
+                        push_strength: 96.0,
+                        side: UpperSide,
+                    ),
+                    robot: Robot(logic_module: EngineRunner("basic")),
+                ),
+            ),
+        ),
+    ],
+)

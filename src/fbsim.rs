@@ -1,4 +1,4 @@
-use crate::{components, config};
+use crate::{components, components::player::PlayerType, config, resources, utils};
 use amethyst::{
     animation::AnimationSetPrefab,
     assets::{AssetStorage, Loader, PrefabData, PrefabLoader, ProgressCounter, RonFormat},
@@ -59,10 +59,33 @@ pub struct FieldSceneData {
 }
 
 fn initialize_field(world: &mut World, progress_counter: &mut ProgressCounter) {
-    let field_prefab = world.exec(|loader: PrefabLoader<'_, FieldSceneData>| {
-        loader.load("sprites/field_ichi_1.ron", RonFormat, progress_counter)
+    let spritename = "sprites/field_ichi_1.ron";
+    let prefab = world.exec(|loader: PrefabLoader<'_, FieldSceneData>| {
+        loader.load(spritename, RonFormat, &mut *progress_counter)
     });
-    world.create_entity().with(field_prefab).build();
+    world.create_entity().with(prefab.clone()).build();
+    // Create players.
+    let prefab_files = [
+        (5, "sprites/enemy.ron", utils::Side::LowerSide),
+        (5, "sprites/player.ron", utils::Side::UpperSide),
+    ];
+    for (number, name, side) in &prefab_files {
+        let prefab = world.exec(|loader: PrefabLoader<'_, FieldSceneData>| {
+            loader.load(*name, RonFormat, &mut *progress_counter)
+        });
+        for i in 0..*number {
+            let position = utils::player_position(i, *side);
+            let player_type = PlayerType::from_index(i);
+            let mut transform = Transform::default();
+            transform.set_translation_xyz(position[0], position[1], 0.0);
+            world
+                .create_entity()
+                .with(prefab.clone())
+                .with(transform)
+                .with(player_type.unwrap())
+                .build();
+        }
+    }
 }
 
 fn initialize_score(world: &mut World, progress_counter: &mut ProgressCounter) {
@@ -101,6 +124,11 @@ fn initialize_score(world: &mut World, progress_counter: &mut ProgressCounter) {
     world.create_entity().with(text).with(ui_transform).build();
 }
 
+fn initialize_engine_registry(world: &mut World) {
+    let mut registry = resources::EngineRegistry::default();
+    world.insert(registry);
+}
+
 fn initialize_camera(world: &mut World) {
     let mut transform = Transform::default();
     transform.set_translation_xyz(config::SCREEN_WIDTH / 2.0, config::SCREEN_HEIGHT / 2.0, 1.0);
@@ -134,5 +162,6 @@ impl SimpleState for FieldState {
         initialize_field(world, &mut self.progress_counter);
         initialize_camera(world);
         initialize_score(world, &mut self.progress_counter);
+        initialize_engine_registry(world);
     }
 }

@@ -1,12 +1,10 @@
 #![enable(implicit_some)]
 Prefab(
     entities: [
-        // Player
+        // Goal post lower left
         PrefabEntity(
             data: (
-                // SpriteScenePrefab
                 sprite_scene: (
-                    // SpriteSheetPrefab with index 0
                     sheet: Sheet(
                         // TexturePrefab
                         texture: File("sprites/field_ichi_1.png", (
@@ -35,127 +33,14 @@ Prefab(
                                 texture_width: 96,
                                 texture_height: 80,
                                 sprites: [
-                                    (x: 0, y: 0, width: 16, height: 16), // human 0
-                                    (x: 16, y: 0, width: 16, height: 16),
-                                    (x: 32, y: 0, width: 16, height: 16),
-                                    (x: 0, y: 16, width: 16, height: 16),
-                                    (x: 16, y: 16, width: 16, height: 16),
-                                    (x: 32, y: 16, width: 16, height: 16),
-                                    (x: 0, y: 32, width: 16, height: 16),
-                                    (x: 16, y: 32, width: 16, height: 16),
-                                    (x: 32, y: 32, width: 16, height: 16),
-                                    (x: 0, y: 48, width: 16, height: 16),
-                                    (x: 16, y: 48, width: 16, height: 16),
-                                    (x: 32, y: 48, width: 16, height: 16),
                                     (x: 0, y: 64, width: 60, height: 8), // net upper 12
                                     (x: 0, y: 72, width: 60, height: 8), // net lower 13
                                     (x: 60, y: 64, width: 4, height: 4), // ball 14
-                                    (x: 48, y: 0, width: 16, height: 16), // robot 15
-                                    (x: 64, y: 0, width: 16, height: 16),
-                                    (x: 80, y: 0, width: 16, height: 16),
-                                    (x: 48, y: 16, width: 16, height: 16),
-                                    (x: 64, y: 16, width: 16, height: 16),
-                                    (x: 80, y: 16, width: 16, height: 16),
-                                    (x: 48, y: 32, width: 16, height: 16),
-                                    (x: 64, y: 32, width: 16, height: 16),
-                                    (x: 80, y: 32, width: 16, height: 16),
-                                    (x: 48, y: 48, width: 16, height: 16),
-                                    (x: 64, y: 48, width: 16, height: 16),
-                                    (x: 80, y: 48, width: 16, height: 16),
                                 ],
                             ))
                         ],
-                        name: "field",
+                        name: "field_ichi",
                     ),
-                    // SpriteRenderPrefab
-                    render: (
-                        sheet: "field",
-                        // 2 is the default standing player.
-                        sprite_number: 2,
-                    ),
-                    // Transform
-                    // TODO: Can I live without this? I want to set it dynamically.
-                    transform: (
-                        translation: (128.0, 216.0, 0.0),
-                    ),
-                ),
-                // AnimationSetPrefab
-                animation_set: (
-                    animations: [
-                        (
-                            // AnimationId
-                            PlayerRun,
-                            (
-                                samplers: [
-                                    (
-                                        0,
-                                        SpriteIndex,
-                                        (
-                                            // Time of key frames
-                                            input: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
-                                            // Sprite indexes from SpriteSheet for key frames
-                                            output: [2, 3, 0, 3, 2, 4, 1, 4, 2],
-                                            function: Step,
-                                        ),
-                                    ),
-                                ],
-                            ),
-                        ),
-                        (
-                            // AnimationId
-                            PlayerStand,
-                            (
-                                samplers: [
-                                    (
-                                        3,
-                                        SpriteIndex,
-                                        (
-                                            // Time of key frames
-                                            input: [
-                                                0.0, 2.4, 2.45, 2.5, 2.55,
-                                                2.6, 2.65, 2.7, 2.75, 2.8,
-                                                2.85, 2.9, 2.95,
-                                            ],
-                                            // Sprite indexes from SpriteSheet for key frames
-                                            output: [
-                                                2, 8, 10, 11, 10,
-                                                9, 8, 9, 10, 11,
-                                                10, 8, 2
-                                            ],
-                                            function: Step,
-                                        ),
-                                    ),
-                                ],
-                            ),
-                        ),
-                    ],
-                ),
-                // Collide a square around.
-                collision_box: (
-                    upper_left_distance: [-6.0, 6.0],
-                    lower_right_distance: [6.0, -6.0],
-                ),
-                movement_state: (
-                    velocity: [0.0, 0.0],
-                    deaccel: 0.0,
-                    reset: true,
-                ),
-                // What defines the specific type of entity.
-                extras: PlayerData(
-                    player: (
-                        speed: 48.0,
-                        kick_strength: 256.0,
-                        push_strength: 96.0,
-                        side: UpperSide,
-                    ),
-                    human: Human,
-                ),
-            ),
-        ),
-        // Goal post lower left
-        PrefabEntity(
-            data: (
-                sprite_scene: (
                     transform: (
                         translation: (128.0, 4.0, 0.0),
                     ),
@@ -229,8 +114,8 @@ Prefab(
             data: (
                 sprite_scene: (
                     render: (
-                        sheet: "field",
-                        sprite_number: 13,
+                        sheet: "field_ichi",
+                        sprite_number: 1,
                     ),
                     transform: (
                         translation: (128.0, 4.0, 0.2),
@@ -253,8 +138,8 @@ Prefab(
             data: (
                 sprite_scene: (
                     render: (
-                        sheet: "field",
-                        sprite_number: 12,
+                        sheet: "field_ichi",
+                        sprite_number: 0,
                     ),
                     transform: (
                         translation: (128.0, 252.0, -0.2),
@@ -277,11 +162,11 @@ Prefab(
             data: (
                 sprite_scene: (
                     render: (
-                        sheet: "field",
-                        sprite_number: 14,
+                        sheet: "field_ichi",
+                        sprite_number: 2,
                     ),
                     transform: (
-                        translation: (128.0, 128.0, -0.1),
+                        translation: (128.0, 128.0, 0.1),
                     ),
                 ),
                 animation_set: (
@@ -298,88 +183,6 @@ Prefab(
                 ),
                 extras: BallData(
                     ball: Ball,
-                ),
-            ),
-        ),
-        // Enemy
-        PrefabEntity(
-            data: (
-                sprite_scene: (
-                    render: (
-                        sheet: "field",
-                        sprite_number: 17,
-                    ),
-                    transform: (
-                        translation: (128.0, 40.0, 0.0),
-                    ),
-                ),
-                animation_set: (
-                    animations: [
-                        (
-                            // AnimationId
-                            PlayerRun,
-                            (
-                                samplers: [
-                                    (
-                                        4,
-                                        SpriteIndex,
-                                        (
-                                            // Time of key frames
-                                            input: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
-                                            // Sprite indexes from SpriteSheet for key frames
-                                            output: [17, 18, 15, 18, 17, 19, 16, 19, 17],
-                                            function: Step,
-                                        ),
-                                    ),
-                                ],
-                            ),
-                        ),
-                        (
-                            // AnimationId
-                            PlayerStand,
-                            (
-                                samplers: [
-                                    (
-                                        5,
-                                        SpriteIndex,
-                                        (
-                                            // Time of key frames
-                                            input: [
-                                                0.0, 2.4, 2.45, 2.5, 2.55,
-                                                2.6, 2.65, 2.7, 2.75, 2.8,
-                                                2.85, 2.9, 2.95,
-                                            ],
-                                            // Sprite indexes from SpriteSheet for key frames
-                                            output: [
-                                                17, 23, 25, 26, 25,
-                                                24, 23, 24, 25, 26,
-                                                25, 23, 17
-                                            ],
-                                            function: Step,
-                                        ),
-                                    ),
-                                ],
-                            ),
-                        ),
-                    ],
-                ),
-                collision_box: (
-                    upper_left_distance: [-8.0, 8.0],
-                    lower_right_distance: [8.0, -8.0],
-                ),
-                movement_state: (
-                    velocity: [0.0, 0.0],
-                    deaccel: 0.0,
-                    reset: true,
-                ),
-                extras: PlayerData(
-                    player: (
-                        speed: 48.0,
-                        kick_strength: 256.0,
-                        push_strength: 96.0,
-                        side: LowerSide,
-                    ),
-                    robot: Robot(logic_module: SillyRun),
                 ),
             ),
         ),

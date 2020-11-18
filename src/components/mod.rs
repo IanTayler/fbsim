@@ -4,6 +4,7 @@ pub use self::human::Human;
 pub use self::movement_state::MovementState;
 pub use self::net::Net;
 pub use self::player::Player;
+pub use self::player::PlayerType;
 pub use self::robot::Robot;
 
 pub mod ball;

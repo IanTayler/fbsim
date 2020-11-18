@@ -1,3 +1,5 @@
+pub use self::engine_registry::EngineRegistry;
 pub use self::score::Score;
 
-mod score;
+pub mod engine_registry;
+pub mod score;

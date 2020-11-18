@@ -18,6 +18,7 @@ use amethyst::{
 
 mod components;
 mod config;
+mod engines;
 mod rectangle;
 mod resources;
 mod systems;
@@ -67,7 +68,7 @@ fn main() -> amethyst::Result<()> {
         .with(systems::InputMovement, "input_movement", &["input_system"])
         .with(systems::InputActions, "input_actions", &["input_system"])
         .with(
-            systems::ai::SillyRun,
+            systems::ai::EngineRunner,
             "ai_logic",
             &["input_actions", "move_objects"],
         )

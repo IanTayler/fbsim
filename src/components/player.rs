@@ -1,4 +1,4 @@
-use crate::utils;
+use crate::{config, utils};
 use amethyst::{
     assets::PrefabData,
     derive::PrefabData,
@@ -33,5 +33,42 @@ impl Player {
 }
 
 impl Component for Player {
+    type Storage = DenseVecStorage<Self>;
+}
+
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PrefabData)]
+#[prefab(Component)]
+pub enum PlayerType {
+    Goalie,
+    Forward,
+    Left,
+    Right,
+    Defender,
+}
+
+impl PlayerType {
+    pub const fn from_index(i: usize) -> Option<Self> {
+        match i {
+            config::FORWARD_NUMBER => Some(PlayerType::Forward),
+            config::GOALIE_NUMBER => Some(PlayerType::Goalie),
+            config::LEFT_NUMBER => Some(PlayerType::Left),
+            config::RIGHT_NUMBER => Some(PlayerType::Right),
+            config::DEFENDER_NUMBER => Some(PlayerType::Defender),
+            _ => None,
+        }
+    }
+
+    pub const fn to_index(&self) -> usize {
+        match self {
+            PlayerType::Goalie => config::GOALIE_NUMBER,
+            PlayerType::Forward => config::FORWARD_NUMBER,
+            PlayerType::Left => config::LEFT_NUMBER,
+            PlayerType::Right => config::RIGHT_NUMBER,
+            PlayerType::Defender => config::DEFENDER_NUMBER,
+        }
+    }
+}
+
+impl Component for PlayerType {
     type Storage = DenseVecStorage<Self>;
 }

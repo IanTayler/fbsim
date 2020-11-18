@@ -1,3 +1,4 @@
+use crate::config;
 use amethyst::input::{InputHandler, StringBindings};
 use serde::{Deserialize, Serialize};
 
@@ -17,4 +18,13 @@ pub fn input_movement(input: &InputHandler<StringBindings>) -> (f32, f32) {
 pub enum Side {
     UpperSide,
     LowerSide,
+}
+
+/// Return the default position for player number i.
+pub fn player_position(i: usize, side: Side) -> [f32; 2] {
+    let mut position = config::RESET_PLAYER_POSITIONS[i];
+    if side == Side::UpperSide {
+        position[1] = config::SCREEN_HEIGHT - position[1];
+    }
+    position
 }

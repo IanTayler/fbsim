@@ -11,6 +11,7 @@ pub struct SillyRun;
 impl<'s> System<'s> for SillyRun {
     type SystemData = (
         WriteStorage<'s, components::Player>,
+        ReadStorage<'s, components::PlayerType>,
         ReadStorage<'s, components::Ball>,
         ReadStorage<'s, components::Robot>,
         ReadStorage<'s, components::Human>,
@@ -21,7 +22,7 @@ impl<'s> System<'s> for SillyRun {
 
     fn run(
         &mut self,
-        (mut players, balls, robots, _humans, nets, mut movement_states, transforms): Self::SystemData,
+        (mut players, _player_types, balls, robots, _humans, nets, mut movement_states, transforms): Self::SystemData,
     ) {
         for (player, movement_state, player_transform, robot) in
             (&mut players, &mut movement_states, &transforms, &robots).join()

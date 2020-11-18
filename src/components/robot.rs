@@ -6,11 +6,12 @@ use amethyst::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub enum LogicModule {
     SillyRun,
+    EngineRunner(String),
 }
-#[derive(Clone, Copy, Debug, Serialize, Deserialize, PrefabData)]
+#[derive(Clone, Debug, Serialize, Deserialize, PrefabData)]
 #[prefab(Component)]
 pub struct Robot {
     pub logic_module: LogicModule,
@@ -19,7 +20,7 @@ pub struct Robot {
 impl Default for Robot {
     fn default() -> Self {
         Robot {
-            logic_module: LogicModule::SillyRun,
+            logic_module: LogicModule::EngineRunner("basic".to_string()),
         }
     }
 }
