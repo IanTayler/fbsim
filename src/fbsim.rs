@@ -125,7 +125,7 @@ fn initialize_score(world: &mut World, progress_counter: &mut ProgressCounter) {
 }
 
 fn initialize_engine_registry(world: &mut World) {
-    let mut registry = resources::EngineRegistry::default();
+    let registry = resources::EngineRegistry::default();
     world.insert(registry);
 }
 
