@@ -36,7 +36,7 @@ impl Component for Player {
     type Storage = DenseVecStorage<Self>;
 }
 
-#[derive(Clone, Copy, Debug, Serialize, Deserialize, PrefabData)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PrefabData, PartialEq, Eq)]
 #[prefab(Component)]
 pub enum PlayerType {
     Goalie,

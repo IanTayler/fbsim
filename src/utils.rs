@@ -20,6 +20,14 @@ pub enum Side {
     LowerSide,
 }
 
+/// Return the opposite side (Upper if Lower, and viceversa)
+pub fn opposite_side(side: Side) -> Side {
+    match side {
+        Side::UpperSide => Side::LowerSide,
+        Side::LowerSide => Side::UpperSide,
+    }
+}
+
 /// Return the default position for player number i.
 pub fn player_position(i: usize, side: Side) -> [f32; 2] {
     let mut position = config::RESET_PLAYER_POSITIONS[i];

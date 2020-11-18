@@ -12,3 +12,7 @@ features = ["vulkan"]
 
 [dependencies.serde]
 version = "1.0.104"
+
+[dependencies]
+rand = "0.7.0"
+rand_distr = "0.3.0"
