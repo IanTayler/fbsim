@@ -77,16 +77,12 @@ impl<'s> System<'s> for EngineRunner {
                 let mut teammates_position = Vec::new();
                 for (p_type, pos) in teammates_position_info {
                     if p_type != player_type {
-                        teammates_position.push(*pos);
+                        teammates_position.push((*p_type, *pos));
                     }
                 }
                 let opponents_position_info = team_position_vectors
                     .get(&utils::opposite_side(player.side))
                     .unwrap();
-                let mut opponents_position = Vec::new();
-                for (_, pos) in opponents_position_info {
-                    opponents_position.push(*pos);
-                }
                 let engine_data = EngineData {
                     ball_position: ball_position,
                     own: player,
@@ -95,7 +91,7 @@ impl<'s> System<'s> for EngineRunner {
                     own_net_position: own_net_position,
                     opponent_net_position: opponent_net_position,
                     teammates_position: teammates_position,
-                    opponents_position: opponents_position,
+                    opponents_position: opponents_position_info.clone(),
                 };
                 let engine = engine_registry.get(engine_name.to_string()).unwrap();
                 let engine_transition = engine.dispatch(engine_data);

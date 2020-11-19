@@ -9,8 +9,8 @@ pub struct EngineData<'a> {
     pub own_type: &'a player::PlayerType,
     pub own_net_position: Vector2<f32>,
     pub opponent_net_position: Vector2<f32>,
-    pub teammates_position: Vec<Vector2<f32>>,
-    pub opponents_position: Vec<Vector2<f32>>,
+    pub teammates_position: Vec<(PlayerType, Vector2<f32>)>,
+    pub opponents_position: Vec<(PlayerType, Vector2<f32>)>,
 }
 
 /// Return value of engine functions.

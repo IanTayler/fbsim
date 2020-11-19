@@ -1,4 +1,7 @@
-use crate::engines::{basic::Basic, Engine};
+use crate::engines::{
+    basic::{Basic, BasicWingWait},
+    Engine,
+};
 use std::collections::BTreeMap;
 
 pub struct EngineRegistry {
@@ -26,6 +29,10 @@ impl Default for EngineRegistry {
         let mut registry =
             EngineRegistry::new(BTreeMap::<String, Box<dyn Engine + Send + Sync>>::new());
         registry.insert("basic".to_string(), Box::new(Basic::new()));
+        registry.insert(
+            "basic_wing_wait".to_string(),
+            Box::new(BasicWingWait::new()),
+        );
         registry
     }
 }

@@ -10,6 +10,8 @@ use amethyst::{
     renderer::SpriteRender,
 };
 
+const MIN_MOVEMENT: f32 = 2.0;
+
 fn rotate_player(movement_x: f32, movement_y: f32, transform: &mut Transform) {
     let has_movement = movement_x.abs() + movement_y.abs() > 0.0;
     if has_movement {
@@ -59,7 +61,7 @@ impl<'s> System<'s> for AnimatePlayer {
             // Creates a new AnimationControlSet for the entity
             let control_set = get_animation_set(&mut control_sets, entity).unwrap();
             let velocity = movement_state.velocity;
-            if velocity.x == 0.0 && velocity.y == 0.0 {
+            if velocity.x < MIN_MOVEMENT && velocity.y < MIN_MOVEMENT {
                 control_set.abort(AnimationId::PlayerRun);
                 control_set.add_animation(
                     AnimationId::PlayerStand,

@@ -1,6 +1,8 @@
 use crate::{
-    components::player::ActionType,
+    components::player::{ActionType, PlayerType},
+    config,
     engines::{Engine, EngineData, EngineTransition},
+    utils,
 };
 use amethyst::core::math::Vector2;
 use rand::{thread_rng, Rng};
@@ -32,14 +34,14 @@ fn defend_with_net_weight(engine_data: EngineData, net_weight: f32) -> EngineTra
     }
 }
 
-fn forward_basic(engine_data: EngineData) -> EngineTransition {
+fn forward_basic(engine_data: EngineData, close_enough: f32) -> EngineTransition {
     let ball_diff_net = engine_data.ball_position - engine_data.opponent_net_position;
     let own_diff_net = engine_data.own_position - engine_data.opponent_net_position;
     let ball_direction = engine_data.ball_position - engine_data.own_position;
+    let reposition_unsized = Vector2::new(ball_direction.y, -ball_direction.x);
+    let reposition = (reposition_unsized / reposition_unsized.norm())
+        * (engine_data.own.speed / REPOSITION_SIZE);
     let (action, velocity) = {
-        let reposition_unsized = Vector2::new(ball_direction.y, -ball_direction.x);
-        let reposition = (reposition_unsized / reposition_unsized.norm())
-            * (engine_data.own.speed / REPOSITION_SIZE);
         if ball_diff_net.norm() >= own_diff_net.norm() {
             (None, ball_direction + reposition)
         } else {
@@ -56,12 +58,12 @@ fn forward_basic(engine_data: EngineData) -> EngineTransition {
             let x_difference_kick =
                 net_x + (ball_angle * own_diff_net.y) - engine_data.own_position.x;
             (
-                if x_difference_kick.abs() < CLOSE_ENOUGH_KICK {
+                if x_difference_kick.abs() < close_enough {
                     Some(ActionType::Kick)
                 } else {
                     None
                 },
-                ball_direction + Vector2::new(adjust_kick_angle, 0.0),
+                ball_direction + Vector2::new(adjust_kick_angle, 0.0) + reposition,
             )
         }
     };
@@ -94,30 +96,106 @@ impl Engine for Basic {
     }
 
     fn forward(&mut self, engine_data: EngineData) -> EngineTransition {
-        forward_basic(engine_data)
+        forward_basic(engine_data, CLOSE_ENOUGH_KICK)
+    }
+}
+
+#[allow(dead_code)]
+fn do_nothing(_engine_data: EngineData) -> EngineTransition {
+    EngineTransition {
+        action: None,
+        velocity: Vector2::new(0.0, 0.0),
+    }
+}
+
+/// Go to a spot relative to your own net.
+fn go_to_spot(engine_data: EngineData, x: f32, y: f32) -> EngineTransition {
+    if engine_data.own.side == utils::Side::UpperSide {
+        EngineTransition {
+            action: None,
+            velocity: Vector2::new(x, config::SCREEN_HEIGHT - y) - engine_data.own_position,
+        }
+    } else {
+        EngineTransition {
+            action: None,
+            velocity: Vector2::new(x, y) - engine_data.own_position,
+        }
+    }
+}
+
+const WING_CENTER_MAX_DIFFERENCE: f32 = config::SCREEN_HEIGHT / 6.0;
+
+fn wing_wait(
+    engine_data: EngineData,
+    otherwise: fn(EngineData) -> EngineTransition,
+) -> EngineTransition {
+    let own_ball_dist = (engine_data.ball_position - engine_data.own_position).norm();
+    for (player_type, position) in &engine_data.teammates_position {
+        if *player_type == PlayerType::Goalie || *player_type == PlayerType::Defender {
+            continue;
+        }
+        let local_ball_dist = (engine_data.ball_position - position).norm();
+        if local_ball_dist < own_ball_dist {
+            return otherwise(engine_data);
+        }
+    }
+    let winger_y_dist = (engine_data.own_position.y - engine_data.opponent_net_position.y).abs();
+    // Be ready to kick the ball forward more often.
+    let forward_transition = forward_basic(engine_data, CLOSE_ENOUGH_KICK * 2.0);
+    if winger_y_dist < WING_CENTER_MAX_DIFFERENCE {
+        EngineTransition {
+            action: Some(ActionType::Kick),
+            velocity: forward_transition.velocity,
+        }
+    } else {
+        forward_transition
     }
 }
 
 pub struct BasicWingWait;
 
+impl BasicWingWait {
+    pub fn new() -> Self {
+        BasicWingWait
+    }
+}
+
 impl Engine for BasicWingWait {
     fn goalie(&mut self, engine_data: EngineData) -> EngineTransition {
-        defend_with_net_weight(engine_data, 2.0)
+        let normal_defense = defend_with_net_weight(engine_data, 2.0);
+        EngineTransition {
+            action: Some(ActionType::Kick),
+            velocity: normal_defense.velocity,
+        }
     }
 
     fn defender(&mut self, engine_data: EngineData) -> EngineTransition {
-        defend_with_net_weight(engine_data, 0.7)
+        wing_wait(engine_data, |x| defend_with_net_weight(x, 0.7))
     }
 
     fn left(&mut self, engine_data: EngineData) -> EngineTransition {
-        self.forward(engine_data)
+        wing_wait(engine_data, |x| {
+            go_to_spot(x, config::SCREEN_WIDTH / 3.0, config::SCREEN_HEIGHT / 2.0)
+        })
     }
 
     fn right(&mut self, engine_data: EngineData) -> EngineTransition {
-        self.forward(engine_data)
+        wing_wait(engine_data, |x| {
+            go_to_spot(
+                x,
+                2.0 * config::SCREEN_WIDTH / 3.0,
+                config::SCREEN_HEIGHT / 2.0,
+            )
+        })
     }
 
     fn forward(&mut self, engine_data: EngineData) -> EngineTransition {
-        forward_basic(engine_data)
+        wing_wait(engine_data, |x| {
+            go_to_spot(
+                x,
+                config::SCREEN_WIDTH / 2.0,
+                2.0 * config::SCREEN_HEIGHT / 3.0,
+            )
+        })
     }
 }

@@ -128,7 +128,7 @@ Prefab(
                         push_strength: 96.0,
                         side: UpperSide,
                     ),
-                    robot: Robot(logic_module: EngineRunner("basic")),
+                    robot: Robot(logic_module: EngineRunner("basic_wing_wait")),
                 ),
             ),
         ),
