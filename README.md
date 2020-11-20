@@ -29,7 +29,7 @@ If you want to write your own engine, the way to do it is:
 
 1. Create a structure implementing the trait `src/engines/engine.rs::Engine`. (Look at `src/engines/basic.rs` implementations as a guide)
 2. Add it to the default engine registry in `src/resources/engine_registry.rs::EngineRegistry::default`.
-3. Modify `assets/sprites/player.ron` so that `entities.data.extras.player.robot.logic_module` is `EngineRunner("<registered_name_for_your_engine>").
+3. Modify `assets/sprites/player.ron` so that `entities.data.extras.player.robot.logic_module` is `EngineRunner("<registered_name_for_your_engine>")`.
 4. Run `cargo run` and see your agents play against the default `Basic` engine! (You can change `enemy.ron` to make them use a different engine as well).
 
 ## Roadmap
