@@ -24,6 +24,7 @@ impl EngineRegistry {
         }
     }
 }
+
 impl Default for EngineRegistry {
     fn default() -> Self {
         let mut registry =

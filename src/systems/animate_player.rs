@@ -10,7 +10,7 @@ use amethyst::{
     renderer::SpriteRender,
 };
 
-const MIN_MOVEMENT: f32 = 2.0;
+const MIN_MOVEMENT: f32 = 1.0;
 
 fn rotate_player(movement_x: f32, movement_y: f32, transform: &mut Transform) {
     let has_movement = movement_x.abs() + movement_y.abs() > 0.0;
