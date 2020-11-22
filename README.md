@@ -1,8 +1,11 @@
 # FBSim
 
-Retro-looking game-like football simulation environment for trying out AI ideas, written in Rust.
+Retro-looking game-like football simulation environment for trying out AI ideas, written in [Rust](https://www.rust-lang.org/) using [amethyst](https://amethyst.rs/).
 
 I wrote all of this in my free time to learn a bit about Rust and game development. The code is very scarcely documented and there is no testing at all. Use at your own risk.
+
+[Video of running game](https://www.youtube.com/watch?v=OGKFFvp1zzA)
+
 
 ![Screenshot of running game](screenshots/2020-11-20_17-09-47.png)
 
