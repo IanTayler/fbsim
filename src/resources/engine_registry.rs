@@ -1,5 +1,6 @@
 use crate::engines::{
     basic::{Basic, BasicWingWait},
+    myengine::MyEngine,
     Engine,
 };
 use std::collections::BTreeMap;
@@ -34,6 +35,7 @@ impl Default for EngineRegistry {
             "basic_wing_wait".to_string(),
             Box::new(BasicWingWait::new()),
         );
+        registry.insert("myengine".to_string(), Box::new(MyEngine {}));
         registry
     }
 }
