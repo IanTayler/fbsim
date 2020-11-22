@@ -48,8 +48,8 @@ fn forward_basic(engine_data: EngineData, close_enough: f32) -> EngineTransition
             // Move towards the ball and kick it!
             // Try to have the right angle to put the ball in the net.
             let ball_angle = ball_diff_net.x / ball_diff_net.y;
-            let kick_x_diff_net = ball_angle
-                * (ball_diff_net.y + COLLISION_DISTANCE_TO_BALL.copysign(ball_diff_net.x));
+            let kick_x_diff_net =
+                ball_angle * ball_diff_net.y + COLLISION_DISTANCE_TO_BALL.copysign(ball_diff_net.x);
             let net_x = engine_data.opponent_net_position.x;
             let perfect_kick_x = net_x + kick_x_diff_net;
             let adjust_kick_angle = perfect_kick_x - engine_data.own_position.x;
